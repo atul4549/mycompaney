@@ -353,4 +353,3 @@ const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-// git add . && git commit -m "pass input added in auth page and profile page added "
