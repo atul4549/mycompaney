@@ -19,8 +19,8 @@ import {
 import { AxiosError } from "axios";
 import useUserStore, { axiosInstance } from "../stores/useUserStore";
 import styles from "../styles/ProfileStyle";
-import { ToastProvider, useToast } from '../components/ToastComponent';
-import Icon from 'react-native-vector-icons/Ionicons'; // Make sure to install: npm install react-native-vector-icons
+import { ToastProvider, useToast } from "../components/ToastComponent";
+import Icon from "react-native-vector-icons/Ionicons"; // Make sure to install: npm install react-native-vector-icons
 
 // --- Type Definitions ---
 interface UserProfile {
@@ -50,44 +50,45 @@ const ProfileScreen: React.FC = ({ navigation }: any) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [editForm, setEditForm] = useState<EditProfileForm>({
-    name: '',
-    bio: '',
-    email: '',
+    name: "",
+    bio: "",
+    email: "",
   });
   const [showSettings, setShowSettings] = useState<boolean>(false);
-  const [notificationsEnabled, setNotificationsEnabled] = useState<boolean>(true);
+  const [notificationsEnabled, setNotificationsEnabled] =
+    useState<boolean>(true);
   const [darkMode, setDarkMode] = useState<boolean>(false);
-  
+
   const { userName, setUserName, logout } = useUserStore() as {
     userName: string;
     setUserName: (name: string) => void;
     logout: () => void;
   };
-  
+
   const toast = useToast();
 
   // --- Fetch User Profile ---
   const fetchUserProfile = async () => {
     setIsLoading(true);
     try {
-      const response = await axiosInstance.get('/api/user/profile');
+      const response = await axiosInstance.get("/api/user/profile");
       const userData = response.data.data;
       setProfile(userData);
-      
+
       // Initialize edit form with current data
       setEditForm({
-        name: userData.name || '',
-        bio: userData.bio || '',
-        email: userData.email || '',
+        name: userData.name || "",
+        bio: userData.bio || "",
+        email: userData.email || "",
       });
     } catch (error) {
       const axiosError = error as AxiosError;
       console.error("Error fetching profile:", axiosError.message);
       toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: 'Failed to load profile data',
-        position: 'top',
+        type: "error",
+        text1: "Error",
+        text2: "Failed to load profile data",
+        position: "top",
         visibilityTime: 3000,
       });
     } finally {
@@ -99,17 +100,30 @@ const ProfileScreen: React.FC = ({ navigation }: any) => {
   const handleUpdateProfile = async () => {
     if (!editForm.name.trim()) {
       toast.show({
-        type: 'warning',
-        text1: 'Name Required',
-        text2: 'Please enter your name',
-        position: 'top',
+        type: "warning",
+        text1: "Name Required",
+        text2: "Please enter your name",
+        position: "top",
+      });
+      return;
+    }
+
+    if (
+      editForm.email.trim() &&
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(editForm.email.trim())
+    ) {
+      toast.show({
+        type: "warning",
+        text1: "Invalid Email",
+        text2: "Please enter a valid email address",
+        position: "top",
       });
       return;
     }
 
     setIsSubmitting(true);
     try {
-      const response = await axiosInstance.put('/api/user/profile', {
+      const response = await axiosInstance.put("/api/user/profile", {
         name: editForm.name.trim(),
         bio: editForm.bio.trim(),
         email: editForm.email.trim(),
@@ -118,60 +132,63 @@ const ProfileScreen: React.FC = ({ navigation }: any) => {
       setProfile(response.data.data);
       setUserName(editForm.name.trim());
       setIsEditing(false);
-      
+
       toast.show({
-        type: 'success',
-        text1: 'Success',
-        text2: 'Profile updated successfully',
-        position: 'bottom',
+        type: "success",
+        text1: "Success",
+        text2: "Profile updated successfully",
+        position: "bottom",
         visibilityTime: 2000,
       });
     } catch (error) {
       const axiosError = error as AxiosError;
       console.error("Error updating profile:", axiosError.message);
       toast.show({
-        type: 'error',
-        text1: 'Update Failed',
-        text2: 'Could not update profile. Please try again.',
-        position: 'top',
+        type: "error",
+        text1: "Update Failed",
+        text2: "Could not update profile. Please try again.",
+        position: "top",
       });
     } finally {
       setIsSubmitting(false);
     }
   };
-
   // --- Change Password ---
-  const handleChangePassword = async (oldPassword: string, newPassword: string) => {
+  const handleChangePassword = async (
+    oldPassword: string,
+    newPassword: string,
+  ) => {
     if (newPassword.length < 6) {
       toast.show({
-        type: 'warning',
-        text1: 'Weak Password',
-        text2: 'Password must be at least 6 characters',
-        position: 'top',
+        type: "warning",
+        text1: "Weak Password",
+        text2: "Password must be at least 6 characters",
+        position: "top",
       });
       return false;
     }
 
     try {
-      const response = await axiosInstance.post('/api/user/change-password', {
+      const response = await axiosInstance.post("/api/user/change-password", {
         oldPassword,
         newPassword,
       });
 
       toast.show({
-        type: 'success',
-        text1: 'Success',
-        text2: 'Password changed successfully',
-        position: 'bottom',
+        type: "success",
+        text1: "Success",
+        text2: "Password changed successfully",
+        position: "bottom",
       });
       return true;
     } catch (error) {
       const axiosError = error as AxiosError;
       toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: axiosError.response?.data?.message || 'Failed to change password',
-        position: 'top',
+        type: "error",
+        text1: "Error",
+        text2:
+          axiosError.response?.data?.message || "Failed to change password",
+        position: "top",
       });
       return false;
     }
@@ -180,57 +197,53 @@ const ProfileScreen: React.FC = ({ navigation }: any) => {
   // --- Delete Account ---
   const handleDeleteAccount = () => {
     Alert.alert(
-      'Delete Account',
-      'Are you sure you want to delete your account? This action cannot be undone.',
+      "Delete Account",
+      "Are you sure you want to delete your account? This action cannot be undone.",
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: "Cancel", style: "cancel" },
         {
-          text: 'Delete',
-          style: 'destructive',
+          text: "Delete",
+          style: "destructive",
           onPress: async () => {
             try {
-              await axiosInstance.delete('/api/user/account');
+              await axiosInstance.delete("/api/user/account");
               toast.show({
-                type: 'success',
-                text1: 'Account Deleted',
-                text2: 'Your account has been deleted',
-                position: 'bottom',
+                type: "success",
+                text1: "Account Deleted",
+                text2: "Your account has been deleted",
+                position: "bottom",
               });
               setTimeout(() => {
                 logout();
-                navigation.replace('Login');
+                navigation.replace("Login");
               }, 2000);
             } catch (error) {
               toast.show({
-                type: 'error',
-                text1: 'Error',
-                text2: 'Failed to delete account',
-                position: 'top',
+                type: "error",
+                text1: "Error",
+                text2: "Failed to delete account",
+                position: "top",
               });
             }
           },
         },
-      ]
+      ],
     );
   };
 
   // --- Logout ---
   const handleLogout = () => {
-    Alert.alert(
-      'Logout',
-      'Are you sure you want to logout?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Logout',
-          style: 'destructive',
-          onPress: () => {
-            logout();
-            navigation.replace('Login');
-          },
+    Alert.alert("Logout", "Are you sure you want to logout?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Logout",
+        style: "destructive",
+        onPress: () => {
+          logout();
+          navigation.replace("Login");
         },
-      ]
-    );
+      },
+    ]);
   };
 
   useEffect(() => {
@@ -247,7 +260,15 @@ const ProfileScreen: React.FC = ({ navigation }: any) => {
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <TouchableOpacity
+      onPress={() => {
+        if (navigation.canGoBack()) {
+          navigation.goBack();
+        } else {
+          navigation.navigate("/");
+        }
+      }}
+    >
       <StatusBar barStyle="light-content" backgroundColor="#0f172a" />
       <KeyboardAvoidingView
         style={styles.container}
@@ -272,7 +293,7 @@ const ProfileScreen: React.FC = ({ navigation }: any) => {
                 source={
                   profile?.avatar
                     ? { uri: profile.avatar }
-                    : require('../assets/images/auth.png')
+                    : require("../assets/images/auth.png")
                 }
                 style={styles.avatar}
               />
@@ -280,10 +301,14 @@ const ProfileScreen: React.FC = ({ navigation }: any) => {
                 <Icon name="camera" size={20} color="#ffffff" />
               </TouchableOpacity>
             </View>
-            
+
             <Text style={styles.username}>@{profile?.username}</Text>
             <Text style={styles.joinDate}>
-              Joined {new Date(profile?.createdAt || '').toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+              Joined{" "}
+              {new Date(profile?.createdAt || "").toLocaleDateString("en-US", {
+                month: "long",
+                year: "numeric",
+              })}
             </Text>
           </View>
 
@@ -295,12 +320,16 @@ const ProfileScreen: React.FC = ({ navigation }: any) => {
             </View>
             <View style={styles.statDivider} />
             <View style={styles.statItem}>
-              <Text style={styles.statNumber}>{profile?.followersCount || 0}</Text>
+              <Text style={styles.statNumber}>
+                {profile?.followersCount || 0}
+              </Text>
               <Text style={styles.statLabel}>Followers</Text>
             </View>
             <View style={styles.statDivider} />
             <View style={styles.statItem}>
-              <Text style={styles.statNumber}>{profile?.followingCount || 0}</Text>
+              <Text style={styles.statNumber}>
+                {profile?.followingCount || 0}
+              </Text>
               <Text style={styles.statLabel}>Following</Text>
             </View>
           </View>
@@ -331,7 +360,7 @@ const ProfileScreen: React.FC = ({ navigation }: any) => {
                 <View style={styles.infoContent}>
                   <Text style={styles.infoLabel}>Bio</Text>
                   <Text style={styles.infoValue}>
-                    {profile?.bio || 'No bio yet. Tap edit to add one!'}
+                    {profile?.bio || "No bio yet. Tap edit to add one!"}
                   </Text>
                 </View>
               </View>
@@ -347,13 +376,15 @@ const ProfileScreen: React.FC = ({ navigation }: any) => {
           ) : (
             <View style={styles.editSection}>
               <Text style={styles.editSectionTitle}>Edit Profile</Text>
-              
+
               <View style={styles.inputGroup}>
                 <Text style={styles.inputLabel}>Name</Text>
                 <TextInput
                   style={styles.textInput}
                   value={editForm.name}
-                  onChangeText={(text) => setEditForm({ ...editForm, name: text })}
+                  onChangeText={(text) =>
+                    setEditForm({ ...editForm, name: text })
+                  }
                   placeholder="Your name"
                   placeholderTextColor="#64748b"
                 />
@@ -364,7 +395,9 @@ const ProfileScreen: React.FC = ({ navigation }: any) => {
                 <TextInput
                   style={[styles.textInput, styles.textArea]}
                   value={editForm.bio}
-                  onChangeText={(text) => setEditForm({ ...editForm, bio: text })}
+                  onChangeText={(text) =>
+                    setEditForm({ ...editForm, bio: text })
+                  }
                   placeholder="Tell us about yourself"
                   placeholderTextColor="#64748b"
                   multiline
@@ -377,7 +410,9 @@ const ProfileScreen: React.FC = ({ navigation }: any) => {
                 <TextInput
                   style={styles.textInput}
                   value={editForm.email}
-                  onChangeText={(text) => setEditForm({ ...editForm, email: text })}
+                  onChangeText={(text) =>
+                    setEditForm({ ...editForm, email: text })
+                  }
                   placeholder="Your email"
                   placeholderTextColor="#64748b"
                   keyboardType="email-address"
@@ -391,15 +426,15 @@ const ProfileScreen: React.FC = ({ navigation }: any) => {
                   onPress={() => {
                     setIsEditing(false);
                     setEditForm({
-                      name: profile?.name || '',
-                      bio: profile?.bio || '',
-                      email: profile?.email || '',
+                      name: profile?.name || "",
+                      bio: profile?.bio || "",
+                      email: profile?.email || "",
                     });
                   }}
                 >
                   <Text style={styles.cancelButtonText}>Cancel</Text>
                 </TouchableOpacity>
-                
+
                 <TouchableOpacity
                   style={[styles.actionButton, styles.saveButton]}
                   onPress={handleUpdateProfile}
@@ -428,7 +463,6 @@ const ProfileScreen: React.FC = ({ navigation }: any) => {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-
       {/* Settings Modal */}
       <Modal
         visible={showSettings}
@@ -448,7 +482,11 @@ const ProfileScreen: React.FC = ({ navigation }: any) => {
             <ScrollView>
               <View style={styles.settingItem}>
                 <View style={styles.settingInfo}>
-                  <Icon name="notifications-outline" size={24} color="#64748b" />
+                  <Icon
+                    name="notifications-outline"
+                    size={24}
+                    color="#64748b"
+                  />
                   <Text style={styles.settingText}>Push Notifications</Text>
                 </View>
                 <Switch
@@ -475,15 +513,19 @@ const ProfileScreen: React.FC = ({ navigation }: any) => {
                 onPress={() => {
                   setShowSettings(false);
                   // Navigate to change password screen or show modal
-                  Alert.alert('Change Password', 'Enter your current and new password', [
-                    { text: 'Cancel', style: 'cancel' },
-                    {
-                      text: 'Change',
-                      onPress: () => {
-                        // Implement password change logic
+                  Alert.alert(
+                    "Change Password",
+                    "Enter your current and new password",
+                    [
+                      { text: "Cancel", style: "cancel" },
+                      {
+                        text: "Change",
+                        onPress: () => {
+                          // Implement password change logic
+                        },
                       },
-                    },
-                  ]);
+                    ],
+                  );
                 }}
               >
                 <Icon name="key-outline" size={24} color="#64748b" />
@@ -496,13 +538,15 @@ const ProfileScreen: React.FC = ({ navigation }: any) => {
                 onPress={handleLogout}
               >
                 <Icon name="log-out-outline" size={24} color="#ef4444" />
-                <Text style={[styles.settingText, styles.logoutText]}>Logout</Text>
+                <Text style={[styles.settingText, styles.logoutText]}>
+                  Logout
+                </Text>
               </TouchableOpacity>
             </ScrollView>
           </View>
         </View>
       </Modal>
-    </SafeAreaView>
+    </TouchableOpacity>
   );
 };
 

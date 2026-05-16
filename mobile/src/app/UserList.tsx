@@ -3,7 +3,8 @@ import EmptyState from '@/components/EmptyState';
 import UserCard from '@/components/UserCard';
 import UserDetailModal from '@/components/UserDetailModal';
 import useUserStore from '@/stores/useUserStore';
-import { Icon } from 'expo-router';
+// import { Icon } from 'expo-router';
+import Icon from 'react-native-vector-icons/Ionicons';
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   // SafeAreaView,
