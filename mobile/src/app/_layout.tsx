@@ -1,3 +1,5 @@
+// import { Text } from 'react-native';
+// import styles from "@/styles/AppStyle";
 // import { Stack } from "expo-router";
 
 // export default function RootLayout() {
@@ -10,8 +12,9 @@
 
 // app/_layout.tsx
 import { Tabs } from "expo-router";
-import { Image, StatusBar } from "react-native";
+import { Image, StatusBar, Text } from "react-native";
 import logo from '../assets/images/logo.png';
+import { ToastProvider } from "@/components/ToastComponent";
 
 export default function RootLayout() {
   return (
@@ -73,8 +76,5 @@ export default function RootLayout() {
 }
 
 // Need to import Text for the icons
-import { Text } from 'react-native';
-import styles from "@/styles/AppStyle";
-import { ToastProvider } from "@/components/ToastComponent";
 
 // import styles from "@/styles/AppStyle";
