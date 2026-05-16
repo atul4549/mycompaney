@@ -198,19 +198,19 @@ const UserListPage = () => {
   }
 
   // Render error state
-  if (error && !isLoading) {
-    return (
-      <SafeAreaView style={styles.safeArea}>
-        <StatusBar barStyle="dark-content" backgroundColor="#f9fafb" />
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>{error}</Text>
-          <TouchableOpacity style={styles.retryButton} onPress={fetchUsers}>
-            <Text style={styles.retryButtonText}>Try Again</Text>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
-    );
-  }
+  // if (error && !isLoading) {
+  //   return (
+  //     <SafeAreaView style={styles.safeArea}>
+  //       <StatusBar barStyle="dark-content" backgroundColor="#f9fafb" />
+  //       <View style={styles.errorContainer}>
+  //         <Text style={styles.errorText}>{error}</Text>
+  //         <TouchableOpacity style={styles.retryButton} onPress={fetchUsers}>
+  //           <Text style={styles.retryButtonText}>Try Again</Text>
+  //         </TouchableOpacity>
+  //       </View>
+  //     </SafeAreaView>
+  //   );
+  // }
 
   return (
     <SafeAreaView style={styles.safeArea}>

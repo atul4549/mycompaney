@@ -8,7 +8,7 @@ const BASE_URL = 'https://mycompaney.onrender.com/api';
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
-  timeout: 10000,
+  withCredentials: true,
 });
 
 // --- Type Definitions ---
