@@ -1,225 +1,3 @@
-// import React, { useState, useRef } from "react";
-// import {
-//   SafeAreaView,
-//   View,
-//   Text,
-//   TextInput,
-//   TouchableOpacity,
-//   ActivityIndicator,
-//   KeyboardAvoidingView,
-//   Platform,
-//   ScrollView,
-//   StatusBar,
-//   TextInput as TextInputType,
-//   Image,
-// } from "react-native";
-// import { AxiosError } from "axios";
-// // import axios from "axios";
-// import useUserStore, { axiosInstance } from "../stores/useUserStore";
-// import styles from "@/styles/AppStyle";
-// import logo from '../assets/images/logo.png';
-// import { ToastProvider, useToast } from '../components/ToastComponent'; // Import the toast component
-
-// // --- Type Definitions ---
-// interface ApiResponse {
-//   success: boolean;
-//   data: unknown;
-// }
-
-// // --- Main App Content Component ---
-// const AppContent: React.FC = () => {
-//   // Local state for the input field before saving to store
-//   const [inputName, setInputName] = useState<string>("");
-//   const { userName, isSubmitting, setUserName, setIsSubmitting } =
-//     useUserStore() as {
-//       userName: string;
-//       isSubmitting: boolean;
-//       setUserName: (name: string) => void;
-//       setIsSubmitting: (status: boolean) => void;
-//     };
-  
-//   const toast = useToast(); // Use the toast hook
-
-//   // --- API Call Simulation using Axios ---
-//   const submitNameToAPI = async (name: string): Promise<ApiResponse> => {
-//     const payload = {
-//       name: name,
-//       timestamp: new Date().toISOString(),
-//       source: "coming_soon_page",
-//     };
-
-//     try {
-//       const response = await axiosInstance.post("/submit-name", payload, {
-//         timeout: 10000,
-//       });
-
-//       console.log("API Response:", response.data);
-//       return { success: true, data: response.data };
-//     } catch (error) {
-//       const axiosError = error as AxiosError;
-//       console.error("API Error:", axiosError.message);
-
-//       if (axiosError.response) {
-//         toast.show({
-//           type: 'error',
-//           text1: 'Server Error',
-//           text2: `Server error: ${axiosError.response.status}`,
-//           position: 'bottom',
-//           visibilityTime: 3000,
-//         });
-//         throw new Error(`Server error: ${axiosError.response.status}`);
-//       } else if (axiosError.request) {
-//         toast.show({
-//           type: 'error',
-//           text1: 'Network Error',
-//           text2: 'Unable to reach the server',
-//           position: 'bottom',
-//           visibilityTime: 3000,
-//         });
-//         throw new Error("Network error: Unable to reach the server");
-//       } else {
-//         toast.show({
-//           type: 'error',
-//           text1: 'Request Error',
-//           text2: axiosError.message,
-//           position: 'bottom',
-//           visibilityTime: 3000,
-//         });
-//         throw new Error(`Request error: ${axiosError.message}`);
-//       }
-//     }
-//   };
-
-//   // --- Form Submission Handler ---
-//   const handleSubmit = async (): Promise<void> => {
-//     const trimmedName = inputName.trim();
-
-//     if (!trimmedName) {
-//       toast.show({
-//         type: 'warning',
-//         text1: 'Name Required',
-//         text2: 'Please enter your name before joining the waitlist.',
-//         position: 'top',
-//         visibilityTime: 3000,
-//       });
-//       return;
-//     }
-
-//     setUserName(trimmedName);
-//     setIsSubmitting(true);
-
-//     try {
-//       await submitNameToAPI(trimmedName);
-//       setInputName("");
-      
-//       toast.show({
-//         type: 'success',
-//         text1: 'Success!',
-//         text2: `Thanks ${trimmedName}! You've been added to our waitlist.`,
-//         position: 'bottom',
-//         visibilityTime: 3000,
-//       });
-//     } catch (error) {
-//       const err = error as Error;
-//       toast.show({
-//         type: 'error',
-//         text1: 'Submission Failed',
-//         text2: err.message || "Something went wrong. Please try again later.",
-//         position: 'bottom',
-//         visibilityTime: 4000,
-//       });
-//     } finally {
-//       setIsSubmitting(false);
-//     }
-//   };
-
-//   const inputRef = useRef<TextInputType>(null);
-
-//   return (
-//     <SafeAreaView style={styles.safeArea}>
-//       <StatusBar barStyle="light-content" backgroundColor="#0f172a" />
-//       <KeyboardAvoidingView
-//         style={styles.container}
-//         behavior={Platform.OS === "ios" ? "padding" : "height"}
-//       >
-//         <ScrollView
-//           contentContainerStyle={styles.scrollContent}
-//           keyboardShouldPersistTaps="handled"
-//         >
-//           <View style={styles.contentWrapper}>
-//             <Image source={logo} style={styles.logo} />
-
-//             <Text style={styles.title}>Coming Soon</Text>
-
-//             <Text style={styles.subtitle}>
-//               We're working hard to bring you something amazing. Be the first to
-//               know when we launch!
-//             </Text>
-
-//             <View style={styles.inputContainer}>
-//               <Text style={styles.inputLabel}>Enter your name</Text>
-//               <TextInput
-//                 ref={inputRef}
-//                 style={styles.textInput}
-//                 placeholder="e.g., Himanshu"
-//                 placeholderTextColor="#64748b"
-//                 value={inputName}
-//                 onChangeText={setInputName}
-//                 editable={!isSubmitting}
-//                 autoCapitalize="words"
-//                 autoCorrect={false}
-//                 returnKeyType="done"
-//                 onSubmitEditing={handleSubmit}
-//               />
-//             </View>
-
-//             <TouchableOpacity
-//               style={[styles.button, isSubmitting && styles.buttonDisabled]}
-//               onPress={handleSubmit}
-//               disabled={isSubmitting}
-//               activeOpacity={0.8}
-//             >
-//               <Text style={styles.buttonText}>
-//                 {isSubmitting ? "Submitting..." : "Join Waitlist"}
-//               </Text>
-//               {isSubmitting && (
-//                 <ActivityIndicator
-//                   size="small"
-//                   color="#ffffff"
-//                   style={styles.loader}
-//                 />
-//               )}
-//             </TouchableOpacity>
-
-//             <Text style={styles.infoText}>
-//               No spam, only important updates. You can unsubscribe anytime.
-//             </Text>
-
-//             {userName ? (
-//               <View style={styles.debugContainer}>
-//                 <Text style={styles.debugText}>
-//                   🧠 Zustand Store: Hello, {userName}!
-//                 </Text>
-//               </View>
-//             ) : null}
-//           </View>
-//         </ScrollView>
-//       </KeyboardAvoidingView>
-//     </SafeAreaView>
-//   );
-// };
-
-// // --- Main App Component with Toast Provider ---
-// const App: React.FC = () => {
-//   return (
-//     <ToastProvider>
-//       <AppContent />
-//     </ToastProvider>
-//   );
-// };
-
-// export default App;
-
 import React, { useState, useRef } from "react";
 import {
   SafeAreaView,
@@ -239,8 +17,8 @@ import { AxiosError } from "axios";
 // import axios from "axios";
 import useUserStore, { axiosInstance } from "../stores/useUserStore";
 import styles from "@/styles/AppStyle";
-import logo from '../assets/images/logo.png';
-import { ToastProvider, useToast } from '../components/ToastComponent'; // Import the toast component
+import logo from "../assets/images/auth.png";
+import { ToastProvider, useToast } from "../components/ToastComponent"; // Import the toast component
 
 // --- Type Definitions ---
 interface ApiResponse {
@@ -253,9 +31,10 @@ const AppContent: React.FC = () => {
   // Local state for the input field before saving to store
   const [inputName, setInputName] = useState<string>("");
   const [username, setUsername] = useState<string>(""); // New state for username
+  const [password, setPassword] = useState<string>(""); // Added password state
   const [isUsernameAvailable, setIsUsernameAvailable] = useState<boolean>(true);
   const [isCheckingUsername, setIsCheckingUsername] = useState<boolean>(false);
-  
+
   const { userName, isSubmitting, setUserName, setIsSubmitting } =
     useUserStore() as {
       userName: string;
@@ -263,36 +42,41 @@ const AppContent: React.FC = () => {
       setUserName: (name: string) => void;
       setIsSubmitting: (status: boolean) => void;
     };
-  
+
   const toast = useToast(); // Use the toast hook
 
   // --- Function to check if username is unique ---
-  const checkUsernameUniqueness = async (usernameToCheck: string): Promise<boolean> => {
+  const checkUsernameUniqueness = async (
+    usernameToCheck: string,
+  ): Promise<boolean> => {
     if (!usernameToCheck.trim()) {
       setIsUsernameAvailable(true);
       return true;
     }
 
     setIsCheckingUsername(true);
-    
+
     try {
-      const response = await axiosInstance.get(`/check-username/${usernameToCheck}`, {
-        timeout: 5000,
-      });
-      
+      const response = await axiosInstance.get(
+        `/check-username/${usernameToCheck}`,
+        {
+          timeout: 5000,
+        },
+      );
+
       const isAvailable = response.data.available === true;
       setIsUsernameAvailable(isAvailable);
-      
+
       if (!isAvailable) {
         toast.show({
-          type: 'warning',
-          text1: 'Username Taken',
-          text2: 'This username is already taken. Please choose another one.',
-          position: 'top',
+          type: "warning",
+          text1: "Username Taken",
+          text2: "This username is already taken. Please choose another one.",
+          position: "top",
           visibilityTime: 3000,
         });
       }
-      
+
       return isAvailable;
     } catch (error) {
       const axiosError = error as AxiosError;
@@ -306,18 +90,25 @@ const AppContent: React.FC = () => {
   };
 
   // --- API Call Simulation using Axios ---
-  const submitNameToAPI = async (name: string, usernameValue: string): Promise<ApiResponse> => {
+  const submitNameToAPI = async (
+    name: string,
+    usernameValue: string,
+    passwordValue: string,
+  ): Promise<ApiResponse> => {
     const payload = {
       name: name,
       username: usernameValue,
+      password: passwordValue, // Added password to payload
       timestamp: new Date().toISOString(),
-      source: "coming_soon_page",
+      source: "auth_page",
     };
 
     try {
-      const response = await axiosInstance.post("/submit-name", payload, {
-        timeout: 10000,
-      });
+      const response = await axiosInstance.post("/submit-name", payload
+      //   , {
+      //   timeout: 10000,
+      // }
+    );
 
       console.log("API Response:", response.data);
       return { success: true, data: response.data };
@@ -329,39 +120,39 @@ const AppContent: React.FC = () => {
         // Check if error is due to duplicate username
         if (axiosError.response.status === 409) {
           toast.show({
-            type: 'error',
-            text1: 'Username Taken',
-            text2: 'This username is already taken. Please choose another one.',
-            position: 'bottom',
+            type: "error",
+            text1: "Username Taken",
+            text2: "This username is already taken. Please choose another one.",
+            position: "bottom",
             visibilityTime: 3000,
           });
           setIsUsernameAvailable(false);
           throw new Error("Username already taken");
         }
-        
+
         toast.show({
-          type: 'error',
-          text1: 'Server Error',
+          type: "error",
+          text1: "Server Error",
           text2: `Server error: ${axiosError.response.status}`,
-          position: 'bottom',
+          position: "bottom",
           visibilityTime: 3000,
         });
         throw new Error(`Server error: ${axiosError.response.status}`);
       } else if (axiosError.request) {
         toast.show({
-          type: 'error',
-          text1: 'Network Error',
-          text2: 'Unable to reach the server',
-          position: 'bottom',
+          type: "error",
+          text1: "Network Error",
+          text2: "Unable to reach the server",
+          position: "bottom",
           visibilityTime: 3000,
         });
         throw new Error("Network error: Unable to reach the server");
       } else {
         toast.show({
-          type: 'error',
-          text1: 'Request Error',
+          type: "error",
+          text1: "Request Error",
           text2: axiosError.message,
-          position: 'bottom',
+          position: "bottom",
           visibilityTime: 3000,
         });
         throw new Error(`Request error: ${axiosError.message}`);
@@ -373,13 +164,14 @@ const AppContent: React.FC = () => {
   const handleSubmit = async (): Promise<void> => {
     const trimmedName = inputName.trim();
     const trimmedUsername = username.trim();
+    const trimmedPassword = password.trim();
 
     if (!trimmedName) {
       toast.show({
-        type: 'warning',
-        text1: 'Name Required',
-        text2: 'Please enter your name before joining the waitlist.',
-        position: 'top',
+        type: "warning",
+        text1: "Name Required",
+        text2: "Please enter your name before joining the waitlist.",
+        position: "top",
         visibilityTime: 3000,
       });
       return;
@@ -387,10 +179,33 @@ const AppContent: React.FC = () => {
 
     if (!trimmedUsername) {
       toast.show({
-        type: 'warning',
-        text1: 'Username Required',
-        text2: 'Please choose a username before joining the waitlist.',
-        position: 'top',
+        type: "warning",
+        text1: "Username Required",
+        text2: "Please choose a username before joining the waitlist.",
+        position: "top",
+        visibilityTime: 3000,
+      });
+      return;
+    }
+
+    if (!trimmedPassword) {
+      toast.show({
+        type: "warning",
+        text1: "Password Required",
+        text2: "Please enter a password before joining the waitlist.",
+        position: "top",
+        visibilityTime: 3000,
+      });
+      return;
+    }
+
+    // Validate password strength (at least 6 characters)
+    if (trimmedPassword.length < 6) {
+      toast.show({
+        type: "warning",
+        text1: "Weak Password",
+        text2: "Password must be at least 6 characters long.",
+        position: "top",
         visibilityTime: 3000,
       });
       return;
@@ -400,10 +215,11 @@ const AppContent: React.FC = () => {
     const usernameRegex = /^[a-zA-Z0-9_.]+$/;
     if (!usernameRegex.test(trimmedUsername)) {
       toast.show({
-        type: 'warning',
-        text1: 'Invalid Username',
-        text2: 'Username can only contain letters, numbers, underscore, and dot.',
-        position: 'top',
+        type: "warning",
+        text1: "Invalid Username",
+        text2:
+          "Username can only contain letters, numbers, underscore, and dot.",
+        position: "top",
         visibilityTime: 3000,
       });
       return;
@@ -419,15 +235,16 @@ const AppContent: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      await submitNameToAPI(trimmedName, trimmedUsername);
+      await submitNameToAPI(trimmedName, trimmedUsername, trimmedPassword);
       setInputName("");
       setUsername("");
-      
+      setPassword(""); // Clear password field
+
       toast.show({
-        type: 'success',
-        text1: 'Success!',
+        type: "success",
+        text1: "Success!",
         text2: `Thanks ${trimmedName}! You've been added to our waitlist with username @${trimmedUsername}.`,
-        position: 'bottom',
+        position: "bottom",
         visibilityTime: 3000,
       });
     } catch (error) {
@@ -435,10 +252,10 @@ const AppContent: React.FC = () => {
       // Error already handled in submitNameToAPI
       if (err.message !== "Username already taken") {
         toast.show({
-          type: 'error',
-          text1: 'Submission Failed',
+          type: "error",
+          text1: "Submission Failed",
           text2: err.message || "Something went wrong. Please try again later.",
-          position: 'bottom',
+          position: "bottom",
           visibilityTime: 4000,
         });
       }
@@ -449,6 +266,7 @@ const AppContent: React.FC = () => {
 
   const inputRef = useRef<TextInputType>(null);
   const usernameRef = useRef<TextInputType>(null);
+  const passwordRef = useRef<TextInputType>(null); // Added password ref
 
   // Debounced username check
   const handleUsernameChange = async (text: string) => {
@@ -473,21 +291,54 @@ const AppContent: React.FC = () => {
           keyboardShouldPersistTaps="handled"
         >
           <View style={styles.contentWrapper}>
-            <Image source={logo} style={styles.logo} />
-
-            <Text style={styles.title}>Coming Soon</Text>
-
-            <Text style={styles.subtitle}>
-              We're working hard to bring you something amazing. Be the first to
-              know when we launch!
-            </Text>
-
+            {/* <Image source={logo} style={{
+  width: 200,
+  height: 200,
+  marginBottom: 50,
+  borderRadius: 50  // Fixed typo: borderRedius -> borderRadius
+}} /> */}
+            {/* <Image 
+  source={logo} 
+  style={{
+    width: 200,
+    height: 200,
+    marginBottom: 50,
+    borderRadius: 20, // Subtle rounded corners
+    borderWidth: 2,
+    borderColor: '#3b82f6',
+  }} 
+/> */}
+            <View
+              style={{
+                width: 200,
+                height: 200,
+                marginBottom: 50,
+                borderRadius: 20,
+                backgroundColor: "#1e293b",
+                justifyContent: "center",
+                alignItems: "center",
+                shadowColor: "#000",
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+                elevation: 5,
+              }}
+            >
+              <Image
+                source={logo}
+                style={{
+                  width: 180,
+                  height: 180,
+                  // borderRadius: 90,
+                  borderRadius: 10,
+                }}
+              />
+            </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>Enter your name</Text>
               <TextInput
                 ref={inputRef}
                 style={styles.textInput}
-                placeholder="e.g., Himanshu"
+                placeholder="Enter Your Name"
                 placeholderTextColor="#64748b"
                 value={inputName}
                 onChangeText={setInputName}
@@ -500,24 +351,25 @@ const AppContent: React.FC = () => {
             </View>
 
             <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>
-                Choose a username
+              {/* <Text style={styles.inputLabel}>
                 <Text style={{ fontSize: 12, color: '#64748b' }}> (unique with min length of 3)</Text>
-              </Text>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Text style={{ 
-                  position: 'absolute', 
-                  left: 12, 
-                  zIndex: 1, 
-                  color: '#64748b',
-                  fontSize: 16 
-                }}>
+              </Text> */}
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Text
+                  style={{
+                    position: "absolute",
+                    left: 12,
+                    zIndex: 1,
+                    color: "#64748b",
+                    fontSize: 16,
+                  }}
+                >
                   @
                 </Text>
                 <TextInput
                   ref={usernameRef}
                   style={[styles.textInput, { paddingLeft: 32 }]}
-                  placeholder="username"
+                  placeholder="username (min length of 3)"
                   placeholderTextColor="#64748b"
                   value={username}
                   onChangeText={handleUsernameChange}
@@ -525,24 +377,31 @@ const AppContent: React.FC = () => {
                   autoCapitalize="none"
                   autoCorrect={false}
                   autoComplete="off"
-                  returnKeyType="done"
-                  onSubmitEditing={handleSubmit}
+                  returnKeyType="next"
+                  onSubmitEditing={() => passwordRef.current?.focus()}
                 />
                 {isCheckingUsername && (
                   <ActivityIndicator
                     size="small"
                     color="#3b82f6"
-                    style={{ position: 'absolute', right: 12 }}
+                    style={{ position: "absolute", right: 12 }}
                   />
                 )}
               </View>
               {username.trim().length > 0 && (
-                <Text style={[
-                  styles.usernameHint,
-                  isUsernameAvailable ? styles.usernameAvailable : styles.usernameUnavailable
-                ]}>
-                  {isCheckingUsername ? 'Checking availability...' : 
-                   isUsernameAvailable ? '✓ Username is available' : '✗ Username is already taken'}
+                <Text
+                  style={[
+                    styles.usernameHint,
+                    isUsernameAvailable
+                      ? styles.usernameAvailable
+                      : styles.usernameUnavailable,
+                  ]}
+                >
+                  {isCheckingUsername
+                    ? "Checking availability..."
+                    : isUsernameAvailable
+                      ? "✓ Username is available"
+                      : "✗ Username is already taken"}
                 </Text>
               )}
               <Text style={styles.usernameFormatHint}>
@@ -550,18 +409,40 @@ const AppContent: React.FC = () => {
               </Text>
             </View>
 
+            <View style={styles.inputContainer}>
+              <TextInput
+                ref={passwordRef}
+                style={styles.textInput}
+                placeholder="Password (min. 6 characters)"
+                placeholderTextColor="#64748b"
+                value={password}
+                onChangeText={setPassword}
+                editable={!isSubmitting}
+                secureTextEntry={true} // This hides the password input
+                autoCapitalize="none"
+                autoCorrect={false}
+                autoComplete="off"
+                returnKeyType="done"
+                onSubmitEditing={handleSubmit}
+              />
+            </View>
+
             <TouchableOpacity
               style={[
-                styles.button, 
-                (isSubmitting || (username.trim().length > 0 && !isUsernameAvailable)) && 
-                styles.buttonDisabled
+                styles.button,
+                (isSubmitting ||
+                  (username.trim().length > 0 && !isUsernameAvailable)) &&
+                  styles.buttonDisabled,
               ]}
               onPress={handleSubmit}
-              disabled={isSubmitting || (username.trim().length > 0 && !isUsernameAvailable)}
+              disabled={
+                isSubmitting ||
+                (username.trim().length > 0 && !isUsernameAvailable)
+              }
               activeOpacity={0.8}
             >
               <Text style={styles.buttonText}>
-                {isSubmitting ? "Submitting..." : "Join Waitlist"}
+                {isSubmitting ? "Submitting..." : "Join"}
               </Text>
               {isSubmitting && (
                 <ActivityIndicator
@@ -572,9 +453,9 @@ const AppContent: React.FC = () => {
               )}
             </TouchableOpacity>
 
-            <Text style={styles.infoText}>
+            {/* <Text style={styles.infoText}>
               No spam, only important updates. You can unsubscribe anytime.
-            </Text>
+            </Text> */}
 
             {userName ? (
               <View style={styles.debugContainer}>

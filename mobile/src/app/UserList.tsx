@@ -1,10 +1,12 @@
+import BottomNavigationBar from '@/components/BottomNavigationBar';
 import EmptyState from '@/components/EmptyState';
 import UserCard from '@/components/UserCard';
 import UserDetailModal from '@/components/UserDetailModal';
 import useUserStore from '@/stores/useUserStore';
+import { Icon } from 'expo-router';
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  SafeAreaView,
+  // SafeAreaView,
   View,
   Text,
   FlatList,
@@ -17,6 +19,7 @@ import {
   Modal,
   ScrollView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 // import axios from 'axios';
 // import { create } from 'zustand';
 
@@ -89,10 +92,14 @@ const UserListPage = () => {
       flex: 1,
       backgroundColor: '#f9fafb',
     },
+    container: {
+      flex: 1,
+      backgroundColor: '#fff',
+    },
     header: {
       backgroundColor: '#ffffff',
       paddingHorizontal: 16,
-      paddingTop: 16,
+      paddingTop: 50,
       paddingBottom: 12,
       borderBottomWidth: 1,
       borderBottomColor: '#e5e7eb',
@@ -214,14 +221,18 @@ const UserListPage = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+
       <StatusBar barStyle="dark-content" backgroundColor="#f9fafb" />
       
       {/* Header with Search */}
       <View style={styles.header}>
         <Text style={styles.title}>Wait List Users</Text>
         
-        {/* <View style={styles.searchContainer}>
-          <Text style={styles.searchIcon}>🔍</Text>
+        <View style={styles.searchContainer}>
+          <Text style={styles.searchIcon}>
+            <Icon name="search" size={16} color="#6b7280" />
+          </Text>
           <TextInput
             style={styles.searchInput}
             placeholder="Search by name, email, or username..."
@@ -230,16 +241,16 @@ const UserListPage = () => {
             onChangeText={setSearchQuery}
             clearButtonMode="while-editing"
           />
-        </View> */}
+        </View>
         
-        <View style={styles.statsContainer}>
+        {/* <View style={styles.statsContainer}>
           <Text style={styles.statsText}>
             {filteredUsers.length} {filteredUsers.length === 1 ? 'user' : 'users'} found
           </Text>
           <TouchableOpacity style={styles.refreshButton} onPress={handleRefresh}>
             <Text style={styles.refreshButtonText}>Refresh</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
       
       {/* User List */}
@@ -280,6 +291,8 @@ const UserListPage = () => {
           setSelectedUser(null);
         }}
       />
+      <BottomNavigationBar/>
+        </View>
     </SafeAreaView>
   );
 };

@@ -5,6 +5,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
+    // paddingTop:50,
+    // paddingBottom: 50
   },
   header: {
     backgroundColor: '#075E54',
@@ -214,7 +216,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     position: 'absolute',
-    bottom: 0,
+    bottom: 50,
     left: 0,
     right: 0,
     flexDirection: 'row',

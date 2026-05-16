@@ -1,5 +1,5 @@
-import { Text } from 'react-native';
-import styles from "@/styles/AppStyle";
+// import { Text } from 'react-native';
+// import styles from "@/styles/AppStyle";
 import { Stack } from "expo-router";
 
 export default function RootLayout() {

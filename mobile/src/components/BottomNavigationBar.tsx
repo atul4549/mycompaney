@@ -97,7 +97,7 @@ const BottomNavigationBar = () => {
     <View style={styles.bottomNav}>
       <TouchableOpacity 
         style={styles.navItem}
-        onPress={() => router.push('index')}
+        onPress={() => router.push('/')}
       >
         <Icon name="chatbubbles" size={24} color="#075E54" />
         <Text style={[styles.navText]}>Chats</Text>
@@ -136,7 +136,7 @@ const BottomNavigationBar = () => {
        */}
       <TouchableOpacity 
         style={styles.navItem}
-        onPress={() => router.push('auth')}
+        onPress={() => router.push('checkAuth')}
       >
         <Icon name="person-circle-outline" size={24} color="#999" />
         <Text style={styles.navText}>Profile</Text>
@@ -158,7 +158,7 @@ export default BottomNavigationBar;
 const styles = StyleSheet.create({
   bottomNav: {
     position: 'absolute',
-    bottom: 0,
+    bottom: 50,
     left: 0,
     right: 0,
     flexDirection: 'row',
@@ -167,6 +167,8 @@ const styles = StyleSheet.create({
     borderTopColor: '#E0E0E0',
     paddingVertical: 10,
     paddingHorizontal: 20,
+    // border:"1px solid red",
+    // height: 50
   },
   navItem: {
     flex: 1,
