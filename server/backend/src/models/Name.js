@@ -25,6 +25,10 @@ const NameSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
-export const Name = model("Namev1", NameSchema);
+export const Name = model("Namev2", NameSchema);

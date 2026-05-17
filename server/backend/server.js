@@ -218,7 +218,7 @@ app.get("/api/users", async (req, res) => {
 app.get("/api/check-username/:username", async (req, res) => {
   try {
     const { username } = req.params;
-
+    console.log(username)
     // Validate username format
     const usernameRegex = /^[a-zA-Z0-9_.]+$/;
     if (!usernameRegex.test(username)) {
