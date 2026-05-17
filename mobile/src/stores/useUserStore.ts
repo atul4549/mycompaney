@@ -4,11 +4,15 @@ import { create } from "zustand";
 import Toast from 'react-native-toast-message';
 import { Alert } from 'react-native';
 
-const BASE_URL = 'https://mycompaney.onrender.com/api';
-// const BASE_URL = 'http://localhost:5000/api';
+// export const BASE_URL = 'https://mycompaney.onrender.com/api';
+const BASE_URL = 'http://localhost:5000/api';
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
   withCredentials: true,
+  timeout: 10000,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 // --- Type Definitions ---
@@ -130,96 +134,96 @@ const useUserStore = create<UserState>((set, get) => ({
   isSubmitting: false,
   
   // --- Auth Actions ---
-  register: async (data: RegisterData) => {
-    set({ isSigningUp: true });
-    try {
-      const res = await axiosInstance.post("/auth/register", data);
-      set({ authUser: res.data });
+  // register: async (data: RegisterData) => {
+  //   set({ isSigningUp: true });
+  //   try {
+  //     const res = await axiosInstance.post("/auth/register", data);
+  //     set({ authUser: res.data });
       
-      Toast.show({
-        type: 'success',
-        text1: 'Success',
-        text2: 'Account created successfully',
-        position: 'bottom',
-        visibilityTime: 3000,
-      });
-    } catch (error) {
-      const axiosError = error as AxiosError<any>;
-      const errorMessage = axiosError.response?.data?.message || "Signup failed";
-      Toast.show({
-        type: 'error',
-        text1: 'Signup Failed',
-        text2: errorMessage,
-        position: 'bottom',
-      });
-      throw error;
-    } finally {
-      set({ isSigningUp: false });
-    }
-  },
+  //     Toast.show({
+  //       type: 'success',
+  //       text1: 'Success',
+  //       text2: 'Account created successfully',
+  //       position: 'bottom',
+  //       visibilityTime: 3000,
+  //     });
+  //   } catch (error) {
+  //     const axiosError = error as AxiosError<any>;
+  //     const errorMessage = axiosError.response?.data?.message || "Signup failed";
+  //     Toast.show({
+  //       type: 'error',
+  //       text1: 'Signup Failed',
+  //       text2: errorMessage,
+  //       position: 'bottom',
+  //     });
+  //     throw error;
+  //   } finally {
+  //     set({ isSigningUp: false });
+  //   }
+  // },
   
-  login: async (data: LoginData) => {
-    set({ isLoggingIn: true });
-    try {
-      const res = await axiosInstance.post("/auth/login", data);
-      set({ authUser: res.data });
+  // login: async (data: LoginData) => {
+  //   set({ isLoggingIn: true });
+  //   try {
+  //     const res = await axiosInstance.post("/auth/login", data);
+  //     set({ authUser: res.data });
       
-      Toast.show({
-        type: 'success',
-        text1: 'Success',
-        text2: 'Logged in successfully',
-        position: 'bottom',
-        visibilityTime: 3000,
-      });
-    } catch (error) {
-      const axiosError = error as AxiosError<any>;
-      const errorMessage = axiosError.response?.data?.message || "Login failed";
-      Toast.show({
-        type: 'error',
-        text1: 'Login Failed',
-        text2: errorMessage,
-        position: 'bottom',
-      });
-      throw error;
-    } finally {
-      set({ isLoggingIn: false });
-    }
-  },
+  //     Toast.show({
+  //       type: 'success',
+  //       text1: 'Success',
+  //       text2: 'Logged in successfully',
+  //       position: 'bottom',
+  //       visibilityTime: 3000,
+  //     });
+  //   } catch (error) {
+  //     const axiosError = error as AxiosError<any>;
+  //     const errorMessage = axiosError.response?.data?.message || "Login failed";
+  //     Toast.show({
+  //       type: 'error',
+  //       text1: 'Login Failed',
+  //       text2: errorMessage,
+  //       position: 'bottom',
+  //     });
+  //     throw error;
+  //   } finally {
+  //     set({ isLoggingIn: false });
+  //   }
+  // },
   
-  logout: async () => {
-    try {
-      await axiosInstance.post("/auth/logout");
-      set({ authUser: null, socket: null, isConnected: false });
+  // logout: async () => {
+  //   try {
+  //     await axiosInstance.post("/auth/logout");
+  //     set({ authUser: null, socket: null, isConnected: false });
       
-      Toast.show({
-        type: 'success',
-        text1: 'Success',
-        text2: 'Logged out successfully',
-        position: 'bottom',
-      });
-    } catch (error) {
-      const axiosError = error as AxiosError<any>;
-      const errorMessage = axiosError.response?.data?.message || "Logout failed";
-      Toast.show({
-        type: 'error',
-        text1: 'Logout Failed',
-        text2: errorMessage,
-        position: 'bottom',
-      });
-    }
-  },
+  //     Toast.show({
+  //       type: 'success',
+  //       text1: 'Success',
+  //       text2: 'Logged out successfully',
+  //       position: 'bottom',
+  //     });
+  //   } catch (error) {
+  //     const axiosError = error as AxiosError<any>;
+  //     const errorMessage = axiosError.response?.data?.message || "Logout failed";
+  //     Toast.show({
+  //       type: 'error',
+  //       text1: 'Logout Failed',
+  //       text2: errorMessage,
+  //       position: 'bottom',
+  //     });
+  //   }
+  // },
   
-  checkAuth: async () => {
-    set({ isCheckingAuth: true });
-    try {
-      const res = await axiosInstance.get("/auth/me");
-      set({ authUser: res.data });
-    } catch (error) {
-      set({ authUser: null });
-    } finally {
-      set({ isCheckingAuth: false });
-    }
-  },
+  // checkAuth: async () => {
+  //   set({ isCheckingAuth: true });
+  //   try {
+  //     const res = await axiosInstance.get("/auth/me");
+  //     set({ authUser: res.data });
+  //   } catch (error) {
+  //     set({ authUser: null });
+  //   } finally {
+  //     set({ isCheckingAuth: false });
+  //   }
+  // },
   
   updateProfile: async (data: Partial<AuthUser>) => {
     set({ isUpdatingProfile: true });

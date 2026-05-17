@@ -1,4 +1,3 @@
-// import React from 'react'
 import {
   View,
   Text,
@@ -16,139 +15,34 @@ import styles from "./style";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import Icon from 'react-native-vector-icons/Ionicons';
+
 const Index = () => {
   const router = useRouter();
-    const [showParticipants, setShowParticipants] = useState(false);
+  const [showParticipants, setShowParticipants] = useState(false);
   
-  return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
-    >
-      <StatusBar backgroundColor="#075E54" barStyle="light-content" />
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity
-        //   style={styles.backButton}
-        //   onPress={() => router.back()}
-        >
-          {/* Bach */}
-          {/* <Icon name="arrow-back" size={24} color="#fff" /> */}
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.headerInfo}
-          //   onPress={() => setShowParticipants(true)}
-        >
-          <View style={styles.headerAvatar}>
-            <Text style={styles.headerAvatarText}>👑</Text>
-          </View>
-          <View>
-            <Text style={styles.headerTitle}>{"Himanshu Chat Community"}</Text>
-            <Text style={styles.headerSubtitle}>
-              {/* {participants} participants  */}• Admin online
-            </Text>
-          </View>
-        </TouchableOpacity>
-        {/* <View style={styles.headerActions}>
-          {currentUser.isAdmin && (
-            <TouchableOpacity 
-              style={styles.headerAction}
-              onPress={() => setShowAdminTools(!showAdminTools)}
-            >
-              <Icon name="settings-outline" size={24} color="#fff" />
-            </TouchableOpacity>
-          )}
-          <TouchableOpacity style={styles.headerAction}>
-            <Icon name="call-outline" size={22} color="#fff" />
-          </TouchableOpacity>
-        </View> */}
-      </View>
-            {/* Admin Tools */}
-      {/* {showAdminTools && currentUser.isAdmin && (
-        <View style={styles.adminTools}>
-          <TouchableOpacity style={styles.adminToolItem} onPress={handleAnnouncement}>
-            <Icon name="megaphone-outline" size={20} color="#075E54" />
-            <Text style={styles.adminToolText}>Announcement</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.adminToolItem}>
-            <Icon name="people-outline" size={20} color="#075E54" />
-            <Text style={styles.adminToolText}>Manage Users</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.adminToolItem}>
-            <Icon name="stats-chart-outline" size={20} color="#075E54" />
-            <Text style={styles.adminToolText}>Analytics</Text>
-          </TouchableOpacity>
-        </View>
-      )} */}
-            {/* Typing Indicator */}
-      {/* {typingUsers.length > 0 && (
-        <View style={styles.typingIndicator}>
-          <Text style={styles.typingText}>
-            {typingUsers.join(', ')} {typingUsers.length === 1 ? 'is' : 'are'} typing...
-          </Text>
-        </View>
-      )} */}
-      {/* Messages List */}
-      {/* <FlatList
-        ref={flatListRef}
-        data={messages}
-        renderItem={renderMessage}
-        keyExtractor={item => item.id}
-        contentContainerStyle={styles.messagesList}
-        showsVerticalScrollIndicator={false}
-        onLayout={() => flatListRef.current?.scrollToEnd({ animated: false })}
-      /> */}
-      {/* Input Area */}
-      <View style={styles.inputContainer}>
-        <TouchableOpacity style={styles.attachButton}>
-          <Icon name="attach-outline" size={24} color="#075E54" />
-        </TouchableOpacity>
-        
-        <TextInput
-          style={styles.input}
-          placeholder="Type your message..."
-          placeholderTextColor="#999"
-        //   value={message}
-          onChangeText={(text) => {
-            // setMessage(text);
-            // setIsTyping(text.length > 0);
-          }}
-          multiline
-        />
-        
-        {/* {message.trim() ? (
-          <TouchableOpacity style={styles.sendButton} onPress={handleSendMessage}>
-            <Icon name="send" size={22} color="#075E54" />
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity style={styles.micButton}>
-            <Icon name="mic-outline" size={24} color="#075E54" />
-          </TouchableOpacity>
-        )} */}
-      </View>
-      
-      {showParticipants && renderParticipantsModal()}
-    </KeyboardAvoidingView>
-  );
-};
-export default Index;
-
+  // Sample participants data - replace with your actual data
+  const [participantsList] = useState([
+    { id: '1', name: 'Himanshu', isAdmin: true, isOnline: true },
+    { id: '2', name: 'Rahul', isAdmin: false, isOnline: true },
+    { id: '3', name: 'Priya', isAdmin: false, isOnline: false },
+    { id: '4', name: 'Amit', isAdmin: false, isOnline: true },
+  ]);
+  
+  const currentUser = { isAdmin: true, id: '1', name: 'Himanshu' }; // Replace with your actual user data
+  
+  // ✅ Move this INSIDE the component
   const renderParticipantsModal = () => (
     <View style={styles.participantsModal}>
       <View style={styles.participantsHeader}>
         <Text style={styles.participantsTitle}>
-          Participants
-           {/* ({participantsList.length}) */}
+          Participants ({participantsList.length})
         </Text>
-        <TouchableOpacity 
-        // onPress={() => setShowParticipants(false)}
-        >
-          {/* <Icon name="close" size={24} color="#000" /> */}
+        <TouchableOpacity onPress={() => setShowParticipants(false)}>
+          <Icon name="close" size={24} color="#000" />
         </TouchableOpacity>
       </View>
       
-      {/* <FlatList
+      <FlatList
         data={participantsList}
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
@@ -177,7 +71,64 @@ export default Index;
             )}
           </View>
         )}
-      /> */}
+      />
     </View>
   );
   
+  // Optional: Handle mute user functionality
+  const handleMuteUser = (userId) => {
+    Alert.alert('Mute User', `Would you like to mute this user?`);
+    // Implement mute logic here
+  };
+  
+  // Optional: Open participants modal from header
+  const openParticipantsModal = () => {
+    setShowParticipants(true);
+  };
+
+  return (
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
+    >
+      <StatusBar backgroundColor="#075E54" barStyle="light-content" />
+      
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={openParticipantsModal}>
+          <View style={styles.headerInfo}>
+            <View style={styles.headerAvatar}>
+              <Text style={styles.headerAvatarText}>👑</Text>
+            </View>
+            <View>
+              <Text style={styles.headerTitle}>Himanshu Chat Community</Text>
+              <Text style={styles.headerSubtitle}>
+                {participantsList.length} participants • Admin online
+              </Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+      </View>
+      
+      {/* Input Area */}
+      <View style={styles.inputContainer}>
+        <TouchableOpacity style={styles.attachButton}>
+          <Icon name="attach-outline" size={24} color="#075E54" />
+        </TouchableOpacity>
+        
+        <TextInput
+          style={styles.input}
+          placeholder="Type your message..."
+          placeholderTextColor="#999"
+          multiline
+        />
+      </View>
+      
+      {/* Participants Modal */}
+      {showParticipants && renderParticipantsModal()}
+    </KeyboardAvoidingView>
+  );
+};
+
+export default Index;
