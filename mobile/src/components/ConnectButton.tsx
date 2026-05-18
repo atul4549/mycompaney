@@ -48,7 +48,7 @@ const ConnectButton = ({
       Alert.alert("Error", error);
       clearError();
     }
-  }, [error]);
+  }, [error, clearError]);
 
   // Loading state
   if (loading) {

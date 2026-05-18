@@ -47,7 +47,8 @@ interface NotificationState {
   actionLoading: string | null; // ID of notification being actioned
 
   // Actions
-  fetchNotifications: (page?: number, type?: string) => Promise<void>;
+  fetchNotifications: (userId: string) => Promise<void>;
+  // fetchNotifications: (page?: number, type?: string) => Promise<void>;
   refreshNotifications: () => Promise<void>;
   markAsRead: (notificationId: string) => Promise<void>;
   markAllAsRead: () => Promise<void>;

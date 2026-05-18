@@ -435,13 +435,13 @@ const NotificationsScreen = () => {
     if (userId) {
       fetchNotifications(userId);
     }
-  }, [userId]);
+  }, [userId, fetchNotifications]);
 
   useEffect(() => {
     if (error) {
       Alert.alert("Error", error, [{ text: "OK", onPress: clearError }]);
     }
-  }, [error]);
+  }, [error, clearError]);
 
   // console.log(notifications.length);
   const getTimeAgo = (dateString: string) => {
@@ -461,8 +461,13 @@ const NotificationsScreen = () => {
         {
           text: "Accept",
           onPress: async () => {
-            await acceptConnectionRequest(notificationId, connectionId);
-            Alert.alert("Success", `You are now connected with ${senderName}!`);
+            try {
+              
+              await acceptConnectionRequest(notificationId, connectionId);
+              Alert.alert("Success", `You are now connected with ${senderName}!`);
+            } catch (error) {
+              Alert.alert("Error", "Failed to accept connection request.");
+            }
           },
         },
       ],
@@ -483,7 +488,12 @@ const NotificationsScreen = () => {
           text: "Reject",
           style: "destructive",
           onPress: async () => {
-            await rejectConnectionRequest(notificationId, connectionId);
+            try {
+              
+              await rejectConnectionRequest(notificationId, connectionId);
+            } catch (error) {
+              Alert.alert("Error", "Failed to reject connection request.");
+            }
           },
         },
       ],
@@ -532,7 +542,7 @@ const NotificationsScreen = () => {
                       handleAccept(
                         item._id,
                         item.connectionId._id,
-                        item.sender.name,
+                        item.sender.username,
                       )
                     }
                     activeOpacity={0.7}
@@ -546,7 +556,7 @@ const NotificationsScreen = () => {
                       handleReject(
                         item._id,
                         item.connectionId._id,
-                        item.sender.name,
+                        item.sender.username,
                       )
                     }
                     activeOpacity={0.7}

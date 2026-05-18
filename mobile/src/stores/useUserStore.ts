@@ -4,8 +4,8 @@ import { create } from "zustand";
 import Toast from 'react-native-toast-message';
 import { Alert } from 'react-native';
 
-// export const BASE_URL = 'https://mycompaney.onrender.com/api';
-const BASE_URL = 'http://localhost:5000/api';
+export const BASE_URL = 'https://mycompaney.onrender.com/api';
+// const BASE_URL = 'http://localhost:5000/api';
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
   withCredentials: true,
