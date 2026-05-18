@@ -47,7 +47,14 @@ export default function Login() {
   const handleLogin = async () => {
     const result = await login(username, password);
 
-    if (!result.success) Alert.alert("Error", result.error);
+     if (!result.success) {
+    Alert.alert("Error", result.error);
+  } else {
+    // Navigate to profile page after successful login
+    navigation.navigate("/profile");
+    // OR if using React Navigation v5/v6 with stack navigator:
+    // navigation.replace("Profile"); // This prevents going back to login
+  }
   };
 
   if (isCheckingAuth) return null;

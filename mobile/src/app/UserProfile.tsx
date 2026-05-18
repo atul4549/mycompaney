@@ -213,7 +213,7 @@ import {
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { useUserStore } from "./UserProfileStore";
-// import ConnectButton from "@/components/ConnectButton";
+import ConnectButton from "@/components/ConnectButton";
 import dayjs from "dayjs";
 import BottomNavigationBar from "@/components/BottomNavigationBar";
 const UserProfile = () => {
@@ -310,9 +310,9 @@ const UserProfile = () => {
           <Text style={styles.email}>{user?.data?.email}</Text>
         )}
         {/* Connect/Accept Button */}
-        {/* <View style={styles.connectButtonContainer}>
+        <View style={styles.connectButtonContainer}>
           <ConnectButton userId={userId} username={user?.data?.username} />
-        </View> */}
+        </View>
       </View>
       <BottomNavigationBar />
     </SafeAreaView>

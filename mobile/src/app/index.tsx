@@ -15,6 +15,8 @@ import logo from "../assets/images/logo.png";
 import BottomNavigationBar from "@/components/BottomNavigationBar";
 import Icon from "react-native-vector-icons/Ionicons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Ionicons } from "@expo/vector-icons";
+import { useNotificationStore } from "@/stores/useNotificationStore";
 // import { useEffect, useState, useCallback } from "react";
 // import { useUserStore } from "./store/userStore";
 const Home = () => {
@@ -31,12 +33,15 @@ const Home = () => {
       },
     });
   };
+  const unreadCount = useNotificationStore((state) => state.unreadCount);
 
   return (
-    <SafeAreaView style={{
-      flex: 1,
-      backgroundColor: '#f9fafb',
-    }}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: "#f9fafb",
+      }}
+    >
       <View style={styles.container}>
         <StatusBar backgroundColor="#075E54" barStyle="light-content" />
 
@@ -44,12 +49,36 @@ const Home = () => {
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Himanshu Chat</Text>
           <View style={styles.headerIcons}>
+            {/* Search Icon */}
             {/* <TouchableOpacity
-            style={styles.headerIcon}
-            onPress={() => router.push("")}
-          >
-          <Icon name="settings-outline" size={24} color="#fff" />
-          </TouchableOpacity> */}
+              style={styles.headerIcon}
+              onPress={() => router.push("/search")}
+            >
+              <Ionicons name="search-outline" size={22} color="#fff" />
+            </TouchableOpacity> */}
+
+            {/* Notifications Icon with Badge */}
+            <TouchableOpacity
+              style={styles.headerIcon}
+              onPress={() => router.push("/Notifications")}
+            >
+              <Ionicons name="notifications-outline" size={22} color="#fff" />
+              {unreadCount > 0 && (
+                <View style={styles.notificationBadge}>
+                  <Text style={styles.notificationBadgeText}>
+                    {unreadCount > 99 ? "99+" : unreadCount}
+                  </Text>
+                </View>
+              )}
+            </TouchableOpacity>
+
+            {/* Profile/Settings Icon */}
+            {/* <TouchableOpacity
+              style={styles.headerIcon}
+              onPress={() => router.push("/profile")}
+            >
+              <Ionicons name="person-circle-outline" size={22} color="#fff" />
+            </TouchableOpacity> */}
           </View>
         </View>
         {/* Search Bar */}

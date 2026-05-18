@@ -261,5 +261,24 @@ const styles = StyleSheet.create({
       shadowOpacity: 0.27,
       shadowRadius: 4.65,
     },
+    notificationBadge: {
+    position: 'absolute',
+    top: -2,
+    right: -6,
+    backgroundColor: '#FF3B30',
+    borderRadius: 10,
+    minWidth: 18,
+    height: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 4,
+    borderWidth: 1.5,
+    borderColor: '#007AFF',
+  },
+  notificationBadgeText: {
+    color: '#fff',
+    fontSize: 10,
+    fontWeight: 'bold',
+  },
   });
 export default styles

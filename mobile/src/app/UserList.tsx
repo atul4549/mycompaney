@@ -9,7 +9,6 @@ import useUserStore from "@/stores/useUserStore";
 import Icon from "react-native-vector-icons/Ionicons";
 import React, { useState, useEffect, useCallback } from "react";
 import {
-  // SafeAreaView,
   View,
   Text,
   FlatList,
@@ -21,9 +20,8 @@ import {
   StatusBar,
   Modal,
   ScrollView,
-  SafeAreaView,
 } from "react-native";
-// import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 // // import axios from 'axios';
 // // import { create } from 'zustand';
 
@@ -329,7 +327,7 @@ const UserListPage = () => {
         {
           text: "Delete",
           style: "destructive",
-          onPress: () => deleteUser(userId: string),
+          onPress: () => deleteUser(userId),
         },
       ],
     );

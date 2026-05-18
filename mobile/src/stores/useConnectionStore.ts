@@ -1,7 +1,7 @@
 // stores/useConnectionStore.ts
-import { create } from 'zustand';
+import { create } from "zustand";
 // import axios from 'axios';
-import { axiosInstance } from './useUserStore';
+import { axiosInstance } from "./useUserStore";
 // import axiosInstance from '../lib/axios';
 
 interface Connection {
@@ -18,7 +18,7 @@ interface Connection {
     username: string;
     avatar?: string;
   };
-  status: 'pending' | 'accepted' | 'rejected';
+  status: "pending" | "accepted" | "rejected";
   createdAt: string;
   updatedAt: string;
 }
@@ -50,21 +50,31 @@ export const useConnectionStore = create<ConnectionState>((set, get) => ({
   actionLoading: false,
 
   // Send connection request
-  sendConnectionRequest: async (userId: string) => {
+  sendConnectionRequest: async (data: { userId: string; senderId: string }) => {
     set({ actionLoading: true, error: null });
-    
+    // console.log(data)
     try {
-      const response = await axiosInstance.post(`/connections/connect/${userId}`);
-      
+      // const response = await axiosInstance.post(`/connections/connect/${userId}`);
+      const response = await axiosInstance.post("/connections/connect", {
+        recipientId: data.userId, // The user you want to connect with
+        senderId: data.senderId, // Current logged-in user
+      });
+      // userId in URL, senderId in body
+    // const response = await axiosInstance.post(
+    //   `/connections/connect/${data.userId}`,
+    //   { senderId: data.senderId }
+    // );
+    
       set((state) => ({
         connectionStatus: response.data.connection,
         actionLoading: false,
       }));
     } catch (error: any) {
-      const message = error.response?.data?.message || 'Failed to send connection request';
-      set({ 
+      const message =
+        error.response?.data?.message || "Failed to send connection request";
+      set({
         error: message,
-        actionLoading: false 
+        actionLoading: false,
       });
       throw error;
     }
@@ -73,22 +83,25 @@ export const useConnectionStore = create<ConnectionState>((set, get) => ({
   // Accept connection request
   acceptConnectionRequest: async (connectionId: string) => {
     set({ actionLoading: true, error: null });
-    
+
     try {
-      const response = await axiosInstance.put(`/connections/accept/${connectionId}`);
-      
+      const response = await axiosInstance.put(
+        `/connections/accept/${connectionId}`,
+      );
+
       set((state) => ({
         connectionStatus: response.data.connection,
         connections: state.connections.map((conn) =>
-          conn._id === connectionId ? response.data.connection : conn
+          conn._id === connectionId ? response.data.connection : conn,
         ),
         actionLoading: false,
       }));
     } catch (error: any) {
-      const message = error.response?.data?.message || 'Failed to accept request';
-      set({ 
+      const message =
+        error.response?.data?.message || "Failed to accept request";
+      set({
         error: message,
-        actionLoading: false 
+        actionLoading: false,
       });
       throw error;
     }
@@ -97,20 +110,25 @@ export const useConnectionStore = create<ConnectionState>((set, get) => ({
   // Reject connection request
   rejectConnectionRequest: async (connectionId: string) => {
     set({ actionLoading: true, error: null });
-    
+
     try {
-      const response = await axiosInstance.put(`/connections/reject/${connectionId}`);
-      
+      const response = await axiosInstance.put(
+        `/connections/reject/${connectionId}`,
+      );
+
       set((state) => ({
         connectionStatus: null,
-        connections: state.connections.filter((conn) => conn._id !== connectionId),
+        connections: state.connections.filter(
+          (conn) => conn._id !== connectionId,
+        ),
         actionLoading: false,
       }));
     } catch (error: any) {
-      const message = error.response?.data?.message || 'Failed to reject request';
-      set({ 
+      const message =
+        error.response?.data?.message || "Failed to reject request";
+      set({
         error: message,
-        actionLoading: false 
+        actionLoading: false,
       });
       throw error;
     }
@@ -119,19 +137,20 @@ export const useConnectionStore = create<ConnectionState>((set, get) => ({
   // Check connection status
   checkConnectionStatus: async (userId: string) => {
     set({ loading: true, error: null });
-    
+
     try {
       const response = await axiosInstance.get(`/connections/status/${userId}`);
-      
-      set({ 
+
+      set({
         connectionStatus: response.data.connection,
-        loading: false 
+        loading: false,
       });
     } catch (error: any) {
-      const message = error.response?.data?.message || 'Failed to check connection status';
-      set({ 
+      const message =
+        error.response?.data?.message || "Failed to check connection status";
+      set({
         error: message,
-        loading: false 
+        loading: false,
       });
     }
   },
@@ -139,23 +158,22 @@ export const useConnectionStore = create<ConnectionState>((set, get) => ({
   // Fetch user's connections
   fetchConnections: async (status?: string) => {
     set({ loading: true, error: null });
-    
+
     try {
-      const url = status 
-        ? `/connections?status=${status}`
-        : '/connections';
-        
+      const url = status ? `/connections?status=${status}` : "/connections";
+
       const response = await axiosInstance.get(url);
-      
-      set({ 
+
+      set({
         connections: response.data.connections,
-        loading: false 
+        loading: false,
       });
     } catch (error: any) {
-      const message = error.response?.data?.message || 'Failed to fetch connections';
-      set({ 
+      const message =
+        error.response?.data?.message || "Failed to fetch connections";
+      set({
         error: message,
-        loading: false 
+        loading: false,
       });
     }
   },
@@ -175,11 +193,12 @@ export const useConnectionStore = create<ConnectionState>((set, get) => ({
   clearError: () => set({ error: null }),
 
   // Reset all state
-  resetState: () => set({
-    connectionStatus: null,
-    connections: [],
-    loading: false,
-    error: null,
-    actionLoading: false,
-  }),
+  resetState: () =>
+    set({
+      connectionStatus: null,
+      connections: [],
+      loading: false,
+      error: null,
+      actionLoading: false,
+    }),
 }));

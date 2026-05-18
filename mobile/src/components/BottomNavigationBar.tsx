@@ -1,154 +1,78 @@
-// import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-// import React from 'react';
-// import Icon from 'react-native-vector-icons/Ionicons';
-// import { useRouter } from "expo-router";
-
-// const BottomNavigationBar = () => {
-//   const router = useRouter();
-  
-//   return (
-//     <View style={styles.bottomNav}>
-//       <TouchableOpacity 
-//         style={styles.navItem}
-//         onPress={() => router.push('index')}
-//       >
-//         <Icon name="chatbubbles" size={24} color="#075E54" />
-//         <Text style={[styles.navText]}>Chats</Text>
-//       </TouchableOpacity>
-      
-//       {/* <TouchableOpacity 
-//         style={styles.navItem}
-//         onPress={() => router.push('StatusList')}
-//       >
-//         <Icon name="time-outline" size={24} color="#999" />
-//         <Text style={[styles.navText]}>Status</Text>
-//       </TouchableOpacity> */}
-      
-//       {/* <TouchableOpacity 
-//         style={styles.navItem}
-//         onPress={() => router.push('BroadcastList')}
-//       >
-//         <Icon name="megaphone-outline" size={24} color="#999" />
-//         <Text style={styles.navText}>Community</Text>
-//       </TouchableOpacity>
-//        */}
-//       {/* <TouchableOpacity 
-//         style={styles.navItem}
-//         onPress={() => router.push('BusinessProfile')}
-//       >
-//         <Icon name="briefcase-outline" size={24} color="#999" />
-//         <Text style={styles.navText}>Business</Text>
-//       </TouchableOpacity>
-//        */}
-//       <TouchableOpacity 
-//         style={styles.navItem}
-//         onPress={() => router.push('Profile')}
-//       >
-//         <Icon name="person-circle-outline" size={24} color="#999" />
-//         <Text style={styles.navText}>Profile</Text>
-//       </TouchableOpacity>
-// {/*       
-//       <TouchableOpacity 
-//         style={styles.navItem}
-//         onPress={() => router.push('Admin')}
-//       >
-//         <Icon name="shield-checkmark-outline" size={24} color="#999" />
-//         <Text style={styles.navText}>Admin</Text>
-//       </TouchableOpacity> */}
-//     </View>
-//   );
-// };
-
-// export default BottomNavigationBar;
-
-// const styles = StyleSheet.create({
-//   bottomNav: {
-//     flexDirection: 'row',
-//     backgroundColor: '#fff',
-//     borderTopWidth: 1,
-//     borderTopColor: '#E0E0E0',
-//     paddingVertical: 10,
-//     paddingHorizontal: 20,
-//   },
-//   navItem: {
-//     flex: 1,
-//     alignItems: 'center',
-//   },
-//   navText: {
-//     fontSize: 12,
-//     color: '#999',
-//     marginTop: 4,
-//   },
-//   navTextActive: {
-//     color: '#075E54',
-//     fontWeight: 'bold',
-//   },
-// });
-
+// components/BottomNavigationBar.tsx
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useRouter } from "expo-router";
+import { useRouter, usePathname } from 'expo-router';
 
 const BottomNavigationBar = () => {
   const router = useRouter();
+  const pathname = usePathname(); // Get current route
+
+  const isActive = (path: string) => {
+    return pathname === path || pathname.startsWith(path + '/');
+  };
   
   return (
     <View style={styles.bottomNav}>
+      {/* Chats Tab */}
       <TouchableOpacity 
         style={styles.navItem}
         onPress={() => router.push('/')}
       >
-        <Icon name="chatbubbles" size={24} color="#075E54" />
-        <Text style={[styles.navText]}>Chats</Text>
+        <Icon 
+          name="chatbubbles" 
+          size={24} 
+          color={isActive('/') ? '#075E54' : '#999'} 
+        />
+        <Text style={[styles.navText, isActive('/') && styles.navTextActive]}>
+          Chats
+        </Text>
       </TouchableOpacity>
+
+      {/* Users Tab */}
       <TouchableOpacity 
         style={styles.navItem}
-        onPress={() => router.push('UserList')}
+        onPress={() => router.push('/UserList')}
       >
-        <Icon name="people-outline" size={24} color="#999" />
-        <Text style={styles.navText}>Users</Text>
+        <Icon 
+          name="people-outline" 
+          size={24} 
+          color={isActive('/UserList') ? '#075E54' : '#999'} 
+        />
+        <Text style={[styles.navText, isActive('/UserList') && styles.navTextActive]}>
+          Users
+        </Text>
       </TouchableOpacity>
-      
-      {/* <TouchableOpacity 
-        style={styles.navItem}
-        onPress={() => router.push('StatusList')}
-      >
-        <Icon name="time-outline" size={24} color="#999" />
-        <Text style={[styles.navText]}>Status</Text>
-      </TouchableOpacity> */}
-      
-      {/* <TouchableOpacity 
-        style={styles.navItem}
-        onPress={() => router.push('BroadcastList')}
-      >
-        <Icon name="megaphone-outline" size={24} color="#999" />
-        <Text style={styles.navText}>Community</Text>
-      </TouchableOpacity>
-       */}
-      {/* <TouchableOpacity 
-        style={styles.navItem}
-        onPress={() => router.push('BusinessProfile')}
-      >
-        <Icon name="briefcase-outline" size={24} color="#999" />
-        <Text style={styles.navText}>Business</Text>
-      </TouchableOpacity>
-       */}
+
+      {/* Notifications Tab */}
       <TouchableOpacity 
         style={styles.navItem}
-        onPress={() => router.push('checkAuth')}
+        onPress={() => router.push('/Notifications')}
       >
-        <Icon name="person-circle-outline" size={24} color="#999" />
-        <Text style={styles.navText}>Profile</Text>
+        <Icon 
+          name="notifications-outline" 
+          size={24} 
+          color={isActive('/notifications') ? '#075E54' : '#999'} 
+        />
+        <Text style={[styles.navText, isActive('/notifications') && styles.navTextActive]}>
+          Alerts
+        </Text>
       </TouchableOpacity>
-{/*       
+
+      {/* Profile Tab */}
       <TouchableOpacity 
         style={styles.navItem}
-        onPress={() => router.push('Admin')}
+        onPress={() => router.push('/auth/profile')}  // Changed to '/profile'
       >
-        <Icon name="shield-checkmark-outline" size={24} color="#999" />
-        <Text style={styles.navText}>Admin</Text>
-      </TouchableOpacity> */}
+        <Icon 
+          name="person-circle-outline" 
+          size={24} 
+          color={isActive('/profile') ? '#075E54' : '#999'} 
+        />
+        <Text style={[styles.navText, isActive('/profile') && styles.navTextActive]}>
+          Profile
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -167,17 +91,27 @@ const styles = StyleSheet.create({
     borderTopColor: '#E0E0E0',
     paddingVertical: 10,
     paddingHorizontal: 20,
-    // border:"1px solid red",
-    // height: 50
+    paddingBottom: 20, // Extra padding for iPhone notch
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: -2,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 3,
+    elevation: 5,
   },
   navItem: {
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 4,
   },
   navText: {
     fontSize: 12,
     color: '#999',
     marginTop: 4,
+    fontWeight: '500',
   },
   navTextActive: {
     color: '#075E54',
