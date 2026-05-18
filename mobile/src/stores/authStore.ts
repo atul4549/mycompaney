@@ -106,6 +106,7 @@ interface User {
 interface AuthState {
   user: User | null;
   token: string | null;
+  userId: string | null;
   isLoading: boolean;
   isCheckingAuth: boolean;
   register: (name: string, username: string, password: string) => Promise<{ success: boolean; error?: string }>;
@@ -119,6 +120,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   token: null,
   isLoading: false,
   isCheckingAuth: true,
+  userId: null,
 
   register: async (name: string, username: string, password: string) => {
     set({ isLoading: true });
@@ -198,13 +200,52 @@ export const useAuthStore = create<AuthState>((set) => ({
       // if (token && userId) {
         // Optional: Verify token validity with backend
         // axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        set({ token, userId });
+        // set({ token, userId });
       // } else {
       //   set({ token: null, userId: null });
       // }
+      if (token && userId) {
+        // Set the token in axios defaults for all future requests
+        axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        
+        // Fetch complete user data from backend
+        try {
+          const response = await axiosInstance.get(`/users/${userId}`);
+          const userData = response?.data?.data;
+          // console.log(userData)
+          set({ 
+            token, 
+            userId, 
+            user: userData,
+            isCheckingAuth: false 
+          });
+        } catch (fetchError) {
+          console.log("Failed to fetch user data", fetchError);
+          // If token is invalid/expired, clear everything
+          set({ 
+            token: null, 
+            userId: null, 
+            user: null,
+            isCheckingAuth: false 
+          });
+        }
+      } else {
+        set({ 
+          token: null, 
+          userId: null, 
+          user: null,
+          isCheckingAuth: false 
+        });
+      }
     } catch (error) {
       console.log("Auth check failed", error);
-      set({ token: null, userId: null });
+      // set({ token: null, userId: null });
+      set({ 
+        token: null, 
+        userId: null, 
+        user: null,
+        isCheckingAuth: false 
+      });
     } finally {
       set({ isCheckingAuth: false });
     }
