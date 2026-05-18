@@ -313,15 +313,14 @@ const UserListPage = () => {
   }, [refreshUsers]);
 
   // Handle user press - Navigate to profile page
-  const handleUserPress = (user) => {
+  const handleUserPress = (user: any) => {
     navigation.navigate('UserProfile', { 
-      userId: user._id,
-      // userData: user 
+      userId: user._id, 
     });
   };
 
   // Handle delete with confirmation
-  const handleDelete = (userId, userName) => {
+  const handleDelete = (userId: string, userName: string) => {
     Alert.alert(
       "Delete User",
       `Are you sure you want to remove ${userName} from the list?`,
@@ -330,7 +329,7 @@ const UserListPage = () => {
         {
           text: "Delete",
           style: "destructive",
-          onPress: () => deleteUser(userId),
+          onPress: () => deleteUser(userId: string),
         },
       ],
     );

@@ -54,15 +54,4 @@ export default function RootLayout() {
     );
   }
 
-  // return (
-  //   <SafeAreaProvider>
-  //     <StatusBar style="dark" />
-  //     <Stack screenOptions={{ headerShown: false }}>
-  //       {/* <Stack.Screen name="(tabs)" /> Your main app screens */}
-  //       <Stack.Screen name="auth/profile" /> {/* Auth screens (login/register) */}
-  //       {/* <Stack.Screen name="profile" /> Profile screen */}
-  //       <Stack.Screen name="index" /> {/* Optional: redirects */}
-  //     </Stack>
-  //   </SafeAreaProvider>
-  // );
 }
